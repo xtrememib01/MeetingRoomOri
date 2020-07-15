@@ -242,11 +242,23 @@ class BookRoomController extends Controller
             $contact =array();
             // $userPhone = $bookroom->user;
             // return $userPhone->Phone;
+            $i= 0;
             foreach($bookroom->shifts as $location){
                 //find all the first normal user and store them in an array ; Required to send each of them a text message
-                $contact[] = \App\User::all()->where('location',$location)->where('user_type','Normal')->first()->Phone;
+                
+                try {
+                    if (\App\User::all()->where('location',$location)->where('user_type','Normal')->first()->Phone!= null){
+                        $contact[] = \App\User::all()->where('location',$location)->where('user_type','Normal')->first()->Phone;
+                    }     
+
+                }
+                catch (\Exception $e) {
+                    
+                }
+            
             }
             
+            return $contact;
             $contractString = null;
             for($i=0;$i<count($contact);$i++){
                 if ($i==0){ $contractString = $contact[$i];}
